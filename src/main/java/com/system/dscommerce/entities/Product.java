@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_product")
@@ -21,6 +23,9 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Size(min = 3, max = 80, message = "Campo deve ter de 3 a 80 caracteres")
+    @NotBlank(message = "Campo obrigatório")
     private String name;
 
     @Column(columnDefinition = "TEXT")
