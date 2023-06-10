@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.system.dscommerce.dtos.ProductDTO;
 import com.system.dscommerce.entities.Product;
 import com.system.dscommerce.repositories.ProductRepository;
+import com.system.dscommerce.services.exceptions.NotFoundExceptionService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -20,7 +21,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        var product = repository.findById(id).get();
+        var product = repository.findById(id).orElseThrow(
+                () -> new NotFoundExceptionService("Produto não encontrado"));
         return new ProductDTO(product);
     }
 
@@ -45,7 +47,16 @@ public class ProductService {
             dtoToProduct(dto, product);
             return new ProductDTO(repository.save(product));
         } catch (EntityNotFoundException e) {
-            throw new EntityNotFoundException("erro");
+            throw new NotFoundExceptionService("Produto não encontrado para ser atualizado");
+        }
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundExceptionService("Produto não encontrado para ser deletado");
         }
     }
 
