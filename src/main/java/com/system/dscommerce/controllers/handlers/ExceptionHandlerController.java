@@ -14,7 +14,6 @@ import com.system.dscommerce.services.exceptions.DatabaseExceptionService;
 import com.system.dscommerce.services.exceptions.NotFoundExceptionService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
@@ -38,13 +37,11 @@ public class ExceptionHandlerController {
     public ResponseEntity<CustomError> validation(ConstraintViolationException e, HttpServletRequest http) {
         var status = HttpStatus.UNPROCESSABLE_ENTITY;
         var fieldMessages = new ArrayList<FieldMessage>();
-        for (ConstraintViolation<?> err : e.getConstraintViolations()) {
+        e.getConstraintViolations().forEach((err) -> {
             fieldMessages.add(new FieldMessage(err.getPropertyPath().toString(), err.getMessage()));
-        }
+        });
         var error = new CustomError(Instant.now(), status.value(), "Campos inválidos",
-                http.getRequestURI(),
-                fieldMessages);
-
+                http.getRequestURI(), fieldMessages);
         return ResponseEntity.status(status).body(error);
     }
 }

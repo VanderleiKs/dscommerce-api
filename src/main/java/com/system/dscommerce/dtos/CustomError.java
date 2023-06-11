@@ -10,7 +10,6 @@ public record CustomError(
                 Integer status,
                 String error,
                 String path,
-
                 @JsonInclude(JsonInclude.Include.NON_NULL) List<FieldMessage> errors) {
 
         public CustomError(Instant timestamp, Integer status, String error, String path) {

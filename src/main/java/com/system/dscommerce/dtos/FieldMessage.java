@@ -1,7 +1,6 @@
 package com.system.dscommerce.dtos;
 
 public record FieldMessage(
-                String fieldName,
-                String message) {
-
+        String fieldName,
+        String message) {
 }

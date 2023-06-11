@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -28,8 +29,12 @@ public class Product {
     @NotBlank(message = "Campo obrigatório")
     private String name;
 
+    @Size(min = 3, message = "Campo deve ter no mínimo 3 caracteres")
+    @NotBlank(message = "Campo obrigatório")
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Positive(message = "O valor deve ser positivo")
     private Double price;
     private String imgUrl;
 
