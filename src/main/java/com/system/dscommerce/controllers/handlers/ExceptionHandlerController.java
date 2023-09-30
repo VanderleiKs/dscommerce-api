@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.system.dscommerce.dtos.CustomError;
 import com.system.dscommerce.dtos.FieldMessage;
 import com.system.dscommerce.services.exceptions.DatabaseExceptionService;
+import com.system.dscommerce.services.exceptions.ForbiddenExceptionService;
 import com.system.dscommerce.services.exceptions.NotFoundExceptionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +43,13 @@ public class ExceptionHandlerController {
         });
         var error = new CustomError(Instant.now(), status.value(), "Campos inválidos",
                 http.getRequestURI(), fieldMessages);
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler(ForbiddenExceptionService.class)
+    public ResponseEntity<CustomError> forbidden(ForbiddenExceptionService e, HttpServletRequest http) {
+        var status = HttpStatus.FORBIDDEN;
+        var error = new CustomError(Instant.now(), status.value(), e.getMessage(), http.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
 }
