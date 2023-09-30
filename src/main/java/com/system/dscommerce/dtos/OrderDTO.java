@@ -7,12 +7,16 @@ import java.util.List;
 import com.system.dscommerce.entities.Order;
 import com.system.dscommerce.entities.OrderStatus;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class OrderDTO {
     private Long id;
     private Instant moment;
     private OrderStatus status;
     private ClientDTO client;
     private PaymentDTO payment;
+
+    @NotEmpty(message = "Deve ter pelo menos 1 item")
     private List<OrderItemsDTO> items = new ArrayList<>();
     public OrderDTO() {
     }
