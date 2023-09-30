@@ -1,9 +1,5 @@
 package com.system.dscommerce.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -50,17 +46,9 @@ public class ProductService {
         var p = new Product();
         dtoToProduct(dto, p);
         p = repository.save(p);
-
         for (Category cat : p.getCategories()) {
             cat.setName(categoryRepository.findById(cat.getId()).get().getName());
         }
-        /* List<Category> cats = new ArrayList<>();
-        p.getCategories().forEach(cat -> cats.add(categoryRepository.findById(cat.getId()).get()));
-        p.getCategories().clear();
-        for (Category cat : cats) {
-            p.getCategories().add(cat);
-        } */
-        
         return new ProductDTO(p);
     }
 
