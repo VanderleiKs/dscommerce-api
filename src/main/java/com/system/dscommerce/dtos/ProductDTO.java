@@ -1,5 +1,8 @@
 package com.system.dscommerce.dtos;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.system.dscommerce.entities.Product;
 
 public record ProductDTO(
@@ -7,7 +10,9 @@ public record ProductDTO(
         String name,
         String description,
         Double price,
-        String imgUrl) {
+        String imgUrl,
+        List<CategoryDTO> categories
+        ) {
 
     public ProductDTO(Product p) {
         this(
@@ -15,6 +20,8 @@ public record ProductDTO(
                 p.getName(),
                 p.getDescription(),
                 p.getPrice(),
-                p.getImgUrl());
+                p.getImgUrl(),
+                p.getCategories().stream().map(cat -> new CategoryDTO(cat)).collect(Collectors.toList())
+                );
     }
 }

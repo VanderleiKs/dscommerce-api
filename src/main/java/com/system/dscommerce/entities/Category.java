@@ -3,6 +3,8 @@ package com.system.dscommerce.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.system.dscommerce.dtos.CategoryDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,11 @@ public class Category {
     private Set<Product> products = new HashSet<>();
 
     public Category() {
+    }
+
+    public Category(CategoryDTO dto) {
+        id = dto.id();
+        name = dto.name();
     }
 
     public Long getId() {

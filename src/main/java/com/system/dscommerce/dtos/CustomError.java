@@ -25,5 +25,5 @@ public record CustomError(
                 this.errors = errors;
 
         }
-
 }
+

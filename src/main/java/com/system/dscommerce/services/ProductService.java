@@ -1,5 +1,9 @@
 package com.system.dscommerce.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -8,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.system.dscommerce.dtos.CategoryDTO;
 import com.system.dscommerce.dtos.ProductDTO;
 import com.system.dscommerce.dtos.ProductMinDTO;
+import com.system.dscommerce.entities.Category;
 import com.system.dscommerce.entities.Product;
+import com.system.dscommerce.repositories.CategoryRepository;
 import com.system.dscommerce.repositories.ProductRepository;
 import com.system.dscommerce.services.exceptions.DatabaseExceptionService;
 import com.system.dscommerce.services.exceptions.NotFoundExceptionService;
@@ -22,6 +29,8 @@ public class ProductService {
 
     @Autowired
     private ProductRepository repository;
+
+    @Autowired CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
@@ -41,6 +50,17 @@ public class ProductService {
         var p = new Product();
         dtoToProduct(dto, p);
         p = repository.save(p);
+
+        for (Category cat : p.getCategories()) {
+            cat.setName(categoryRepository.findById(cat.getId()).get().getName());
+        }
+        /* List<Category> cats = new ArrayList<>();
+        p.getCategories().forEach(cat -> cats.add(categoryRepository.findById(cat.getId()).get()));
+        p.getCategories().clear();
+        for (Category cat : cats) {
+            p.getCategories().add(cat);
+        } */
+        
         return new ProductDTO(p);
     }
 
@@ -71,5 +91,13 @@ public class ProductService {
         p.setDescription(dto.description());
         p.setPrice(dto.price());
         p.setImgUrl(dto.imgUrl());
+        p.getCategories().clear();
+        p.getCategories().clear();
+        for (CategoryDTO catDto : dto.categories()) {
+            Category category = new Category();
+            category.setId(catDto.id());
+            category.setName(catDto.name());
+            p.getCategories().add(category);
+        }
     }
 }
