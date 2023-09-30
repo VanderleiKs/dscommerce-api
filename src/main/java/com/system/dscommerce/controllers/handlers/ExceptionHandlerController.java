@@ -35,10 +35,10 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<CustomError> validation(ConstraintViolationException e, HttpServletRequest http) {
+    public ResponseEntity<CustomError> validation(ConstraintViolationException ex, HttpServletRequest http) {
         var status = HttpStatus.UNPROCESSABLE_ENTITY;
         var fieldMessages = new ArrayList<FieldMessage>();
-        e.getConstraintViolations().forEach((err) -> {
+        ex.getConstraintViolations().forEach((err) -> {
             fieldMessages.add(new FieldMessage(err.getPropertyPath().toString(), err.getMessage()));
         });
         var error = new CustomError(Instant.now(), status.value(), "Campos inválidos",
